@@ -5,10 +5,33 @@ async function main() {
     //stworz nowe połaczenie do bazy danych pod nazwa client używając sterownika MongoClient (alias do mongodb)
     //i danych do połaczenia wygenerowanych z atlasa
     const client = new MongoClient(mongoString);
-    //uwaga - otwieram połączenie - to może potrwać więc dajemy await
-    await client.connect();
-    
-    await client.close();
+
+    try {
+        //to spróbuje się zrobić
+        //uwaga - otwieram połączenie - to może potrwać więc dajemy await
+        await client.connect();
+        //pokaż listę baz danych
+        await listDB(client);
+    } catch (e) {
+        //jeśli się wywali na twarz - wyświetl szczegóły w konsoli
+        console.error(e)
+    } finally {
+        //tak czy owak na koniec się zrobi
+        //zamykamy połaczenie
+        await client.close();
+    }
+}
+//ściągnij listę baz danych i wyświetl w konsoli 
+//jako parametr przyjmuje połaczenie do bazy
+async function listDB(client) {
+    let list = await client.db().admin().listDatabases();
+    //pokaż w konsoli nagłowek listy
+    console.log("Lista baz danych na serwerze:");
+    //dla każdej bazy danych na liście...
+    list.databases.forEach(database => {
+        //wyświetl napis Baza: i doklej nazwę bazy danych
+        console.log("Baza: " + database.name);
+    });
 }
 
 //uruchom funkcje main - jeśli coś pójdzie nie tak to wyrzuc bład na konsole
