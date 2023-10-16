@@ -30,7 +30,7 @@ async function getOneByName(client, name) {
         //findOne jest funkcją zaprogramowaną w sterowniku do mongodb
         //potrzebuje ona filtra (odpowiednik WHERE w mysql zdefiniowanego w jsonie)
         {
-            name: name
+            "name": name
         }
     ); //koniec findOne()
     //jeśli uda  się znaleźć pasujący rekord
