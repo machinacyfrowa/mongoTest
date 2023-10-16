@@ -11,7 +11,8 @@ async function main() {
         //uwaga - otwieram połączenie - to może potrwać więc dajemy await
         await client.connect();
         //pokaż listę baz danych
-        await listDB(client);
+        //await listDB(client);
+        await getOneByName(client, "test");
     } catch (e) {
         //jeśli się wywali na twarz - wyświetl szczegóły w konsoli
         console.error(e)
@@ -32,6 +33,25 @@ async function listDB(client) {
         //wyświetl napis Baza: i doklej nazwę bazy danych
         console.log("Baza: " + database.name);
     });
+}
+//ściagnij jeden lokal z bazy airbnb po jego nazwie
+async function getOneByName(client, name) {
+    //wez dane z bazy o nazwie "sample_airbrb", z kolekcji o nazwie "listingsAndReviews"
+    const result = await client.db("sample_airbnb").collection("listingsAndReviews").findOne(
+        //findOne jest funkcją zaprogramowaną w sterowniku do mongodb
+        //potrzebuje ona filtra (odpowiednik WHERE w mysql zdefiniowanego w jsonie)
+        {
+            name: "Horto flat with small garden"
+        }
+    ); //koniec findOne()
+    //jeśli uda  się znaleźć pasujący rekord
+    if(result) {
+        console.log("Znaleziono pasujący rekord:");
+        console.log(result);
+    //jeśli nie:
+    } else {
+        console.log("Nie znaleziono pasującego rekordu:");
+    }
 }
 
 //uruchom funkcje main - jeśli coś pójdzie nie tak to wyrzuc bład na konsole
